@@ -14,7 +14,7 @@ func Eq[T comparable](t testing.TB, want, got T) {
 	}
 }
 
-// NotEq calls t.Fatal if want == got.
+// NotEq calls t.Fatal if got == bad.
 func NotEq[T comparable](t testing.TB, bad, got T) {
 	t.Helper()
 	if got == bad {
