@@ -1,3 +1,4 @@
+// Package be is a minimalist test assertion helper library.
 package be
 
 import (
@@ -5,6 +6,7 @@ import (
 	"testing"
 )
 
+// Eq calls t.Fatal if want != got.
 func Eq[T comparable](t testing.TB, want, got T) {
 	t.Helper()
 	if want != got {
@@ -12,6 +14,7 @@ func Eq[T comparable](t testing.TB, want, got T) {
 	}
 }
 
+// NotEq calls t.Fatal if want == got.
 func NotEq[T comparable](t testing.TB, bad, got T) {
 	t.Helper()
 	if got == bad {
@@ -19,6 +22,7 @@ func NotEq[T comparable](t testing.TB, bad, got T) {
 	}
 }
 
+// EqSlice calls t.Fatal if want != got.
 func EqSlice[T comparable](t testing.TB, want, got []T) {
 	t.Helper()
 	if len(want) != len(got) {
@@ -33,6 +37,7 @@ func EqSlice[T comparable](t testing.TB, want, got []T) {
 	}
 }
 
+// Zero calls t.Fatal if value != the zero value for T.
 func Zero[T any](t testing.TB, value T) {
 	t.Helper()
 	if truthy(value) {
@@ -40,6 +45,7 @@ func Zero[T any](t testing.TB, value T) {
 	}
 }
 
+// Zero calls t.Fatal if value == the zero value for T.
 func NonZero[T any](t testing.TB, value T) {
 	t.Helper()
 	if !truthy(value) {
