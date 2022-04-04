@@ -20,22 +20,22 @@ func Example() {
 	// mock *testing.T for example purposes
 	var t mockingT
 
-	be.Eq(t, "hello", "world")     // bad
-	be.Eq(t, "goodbye", "goodbye") // good
+	be.Equal(t, "hello", "world")     // bad
+	be.Equal(t, "goodbye", "goodbye") // good
 
-	be.NotEq(t, "hello", "world")     // good
-	be.NotEq(t, "goodbye", "goodbye") // bad
+	be.Unequal(t, "hello", "world")     // good
+	be.Unequal(t, "goodbye", "goodbye") // bad
 
 	s := []int{1, 2, 3}
-	be.EqSlice(t, []int{1, 2, 3}, s) // good
-	be.EqSlice(t, []int{3, 2, 1}, s) // bad
+	be.AllEqual(t, []int{1, 2, 3}, s) // good
+	be.AllEqual(t, []int{3, 2, 1}, s) // bad
 
 	var err error
 	be.Zero(t, err)    // good
-	be.NonZero(t, err) // bad
+	be.Nonzero(t, err) // bad
 	err = errors.New("(O_o)")
 	be.Zero(t, err)    // bad
-	be.NonZero(t, err) // good
+	be.Nonzero(t, err) // good
 
 	// Output:
 	// want: hello; got: world

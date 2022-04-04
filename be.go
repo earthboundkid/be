@@ -6,24 +6,24 @@ import (
 	"testing"
 )
 
-// Eq calls t.Fatal if want != got.
-func Eq[T comparable](t testing.TB, want, got T) {
+// Equal calls t.Fatal if want != got.
+func Equal[T comparable](t testing.TB, want, got T) {
 	t.Helper()
 	if want != got {
 		t.Fatalf("want: %v; got: %v", want, got)
 	}
 }
 
-// NotEq calls t.Fatal if got == bad.
-func NotEq[T comparable](t testing.TB, bad, got T) {
+// Unequal calls t.Fatal if got == bad.
+func Unequal[T comparable](t testing.TB, bad, got T) {
 	t.Helper()
 	if got == bad {
 		t.Fatalf("got: %v", got)
 	}
 }
 
-// EqSlice calls t.Fatal if want != got.
-func EqSlice[T comparable](t testing.TB, want, got []T) {
+// AllEqual calls t.Fatal if want != got.
+func AllEqual[T comparable](t testing.TB, want, got []T) {
 	t.Helper()
 	if len(want) != len(got) {
 		t.Fatalf("len(want): %d; len(got): %v", len(want), len(got))
@@ -45,8 +45,8 @@ func Zero[T any](t testing.TB, value T) {
 	}
 }
 
-// Zero calls t.Fatal if value == the zero value for T.
-func NonZero[T any](t testing.TB, value T) {
+// Nonzero calls t.Fatal if value == the zero value for T.
+func Nonzero[T any](t testing.TB, value T) {
 	t.Helper()
 	if !truthy(value) {
 		t.Fatalf("got: %v", value)
