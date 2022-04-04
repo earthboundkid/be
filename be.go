@@ -2,15 +2,28 @@
 package be
 
 import (
+	"fmt"
+	"path/filepath"
 	"reflect"
+	"runtime"
 	"testing"
 )
+
+func fail(t testing.TB, format string, args ...any) {
+	s := fmt.Sprintf(format, args...)
+	var prefix string
+	if _, file, line, ok := runtime.Caller(2); ok {
+		file = filepath.Base(file)
+		prefix = fmt.Sprintf("%s:%d ", file, line)
+	}
+	t.Fatal(prefix + s)
+}
 
 // Equal calls t.Fatal if want != got.
 func Equal[T comparable](t testing.TB, want, got T) {
 	t.Helper()
 	if want != got {
-		t.Fatalf("want: %v; got: %v", want, got)
+		fail(t, "want: %v; got: %v", want, got)
 	}
 }
 
@@ -18,7 +31,7 @@ func Equal[T comparable](t testing.TB, want, got T) {
 func Unequal[T comparable](t testing.TB, bad, got T) {
 	t.Helper()
 	if got == bad {
-		t.Fatalf("got: %v", got)
+		fail(t, "got: %v", got)
 	}
 }
 
@@ -26,12 +39,12 @@ func Unequal[T comparable](t testing.TB, bad, got T) {
 func AllEqual[T comparable](t testing.TB, want, got []T) {
 	t.Helper()
 	if len(want) != len(got) {
-		t.Fatalf("len(want): %d; len(got): %v", len(want), len(got))
+		fail(t, "len(want): %d; len(got): %v", len(want), len(got))
 		return
 	}
 	for i := range want {
 		if want[i] != got[i] {
-			t.Fatalf("want: %v; got: %v", want, got)
+			fail(t, "want: %v; got: %v", want, got)
 			return
 		}
 	}
@@ -41,7 +54,7 @@ func AllEqual[T comparable](t testing.TB, want, got []T) {
 func Zero[T any](t testing.TB, value T) {
 	t.Helper()
 	if truthy(value) {
-		t.Fatalf("got: %v", value)
+		fail(t, "got: %v", value)
 	}
 }
 
@@ -49,7 +62,7 @@ func Zero[T any](t testing.TB, value T) {
 func Nonzero[T any](t testing.TB, value T) {
 	t.Helper()
 	if !truthy(value) {
-		t.Fatalf("got: %v", value)
+		fail(t, "got: %v", value)
 	}
 }
 
