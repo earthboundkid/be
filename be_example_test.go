@@ -31,10 +31,10 @@ func Example() {
 	be.AllEqual(t, []int{3, 2, 1}, s) // bad
 
 	var err error
-	be.Zero(t, err)    // good
+	be.NilErr(t, err)  // good
 	be.Nonzero(t, err) // bad
 	err = errors.New("(O_o)")
-	be.Zero(t, err)    // bad
+	be.NilErr(t, err)  // bad
 	be.Nonzero(t, err) // good
 
 	type mytype string
