@@ -12,8 +12,8 @@ type mockingT struct{ *testing.T }
 
 func (_ mockingT) Helper() {}
 
-func (_ mockingT) Fatal(args ...any) {
-	fmt.Println(args...)
+func (_ mockingT) Fatalf(format string, args ...any) {
+	fmt.Printf(format+"\n", args...)
 }
 
 func Example() {
@@ -38,9 +38,9 @@ func Example() {
 	be.Nonzero(t, err) // good
 
 	// Output:
-	// be_example_test.go:23 want: hello; got: world
-	// be_example_test.go:27 got: goodbye
-	// be_example_test.go:31 want: [3 2 1]; got: [1 2 3]
-	// be_example_test.go:35 got: <nil>
-	// be_example_test.go:37 got: (O_o)
+	// want: hello; got: world
+	// got: goodbye
+	// want: [3 2 1]; got: [1 2 3]
+	// got: <nil>
+	// got: (O_o)
 }
