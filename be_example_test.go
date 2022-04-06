@@ -37,10 +37,19 @@ func Example() {
 	be.Zero(t, err)    // bad
 	be.Nonzero(t, err) // good
 
+	type mytype string
+	var mystring mytype = "hello, world"
+	be.In(t, "world", mystring)              // good
+	be.In(t, "World", mystring)              // bad
+	be.In(t, "\x00", []byte("\a\b\x00\r\t")) // good
+	be.In(t, "\x01", []byte("\a\b\x00\r\t")) // bad
+
 	// Output:
 	// want: hello; got: world
 	// got: goodbye
 	// want: [3 2 1]; got: [1 2 3]
 	// got: <nil>
 	// got: (O_o)
+	// "World" not in "hello, world"
+	// "\x01" not in "\a\b\x00\r\t"
 }
