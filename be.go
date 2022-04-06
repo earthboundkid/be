@@ -2,7 +2,9 @@
 package be
 
 import (
+	"bytes"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -67,5 +69,23 @@ func reflectValue(vp any) bool {
 		return rv.Len() != 0
 	default:
 		return !rv.IsZero()
+	}
+}
+
+// In calls t.Fatal if needle is not contained in the string or []byte haystack.
+func In[byteseq ~string | ~[]byte](t testing.TB, needle string, haystack byteseq) {
+	t.Helper()
+	var failed bool
+	rv := reflect.ValueOf(haystack)
+	switch rv.Kind() {
+	case reflect.String:
+		failed = !strings.Contains(rv.String(), needle)
+	case reflect.Slice:
+		failed = !bytes.Contains(rv.Bytes(), []byte(needle))
+	default:
+		panic("unreachable")
+	}
+	if failed {
+		t.Fatalf("%q not in %q", needle, haystack)
 	}
 }

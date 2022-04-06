@@ -25,4 +25,12 @@ err = errors.New("(O_o)")
 be.Zero(t, err)    // bad
 // t.Fatal("got: (O_o)")
 be.Nonzero(t, err) // good
+
+be.In(t, "world", "hello, world") // good
+be.In(t, "World", "hello, world") // bad
+// t.Fatal("World" not in "hello, world")
+be.In(t, "\x00", []byte("\a\b\x00\r\t")) // good
+be.In(t, "\x01", []byte("\a\b\x00\r\t")) // bad
+// t.Fatal("\x01" not in "\a\b\x00\r\t")
+
 ```
