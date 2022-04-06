@@ -89,3 +89,12 @@ func In[byteseq ~string | ~[]byte](t testing.TB, needle string, haystack byteseq
 		t.Fatalf("%q not in %q", needle, haystack)
 	}
 }
+
+var (
+	// NilErr calls t.Fatal if value is not nil.
+	NilErr = Zero[error]
+	// True calls t.Fatal if value is not true.
+	True = Nonzero[bool]
+	// False calls t.Fatal if value is not false.
+	False = Zero[bool]
+)

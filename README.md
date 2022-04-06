@@ -18,11 +18,11 @@ be.AllEqual(t, []int{3, 2, 1}, s) // bad
 // t.Fatal("want: [3 2 1]; got: [1 2 3]")
 
 var err error
-be.Zero(t, err)    // good
+be.NilErr(t, err)   // good
 be.Nonzero(t, err) // bad
 // t.Fatal("got: <nil>")
 err = errors.New("(O_o)")
-be.Zero(t, err)    // bad
+be.NilErr(t, err)   // bad
 // t.Fatal("got: (O_o)")
 be.Nonzero(t, err) // good
 
