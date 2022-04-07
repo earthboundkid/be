@@ -39,10 +39,10 @@ func Example() {
 
 	type mytype string
 	var mystring mytype = "hello, world"
-	be.In(t, "world", mystring)              // good
-	be.In(t, "World", mystring)              // bad
-	be.In(t, "\x00", []byte("\a\b\x00\r\t")) // good
-	be.In(t, "\x01", []byte("\a\b\x00\r\t")) // bad
+	be.In(t, "world", mystring)                 // good
+	be.In(t, "World", mystring)                 // bad
+	be.NotIn(t, "\x01", []byte("\a\b\x00\r\t")) // good
+	be.NotIn(t, "\x00", []byte("\a\b\x00\r\t")) // bad
 
 	// Output:
 	// want: hello; got: world
@@ -51,5 +51,5 @@ func Example() {
 	// got: <nil>
 	// got: (O_o)
 	// "World" not in "hello, world"
-	// "\x01" not in "\a\b\x00\r\t"
+	// "\x00" in "\a\b\x00\r\t"
 }
