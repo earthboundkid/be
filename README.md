@@ -29,8 +29,8 @@ be.Nonzero(t, err) // good
 be.In(t, "world", "hello, world") // good
 be.In(t, "World", "hello, world") // bad
 // t.Fatal("World" not in "hello, world")
-be.In(t, "\x00", []byte("\a\b\x00\r\t")) // good
-be.In(t, "\x01", []byte("\a\b\x00\r\t")) // bad
-// t.Fatal("\x01" not in "\a\b\x00\r\t")
+be.NotIn(t, "\x01", []byte("\a\b\x00\r\t")) // good
+be.NotIn(t, "\x00", []byte("\a\b\x00\r\t")) // bad
+// t.Fatal("\x00" in "\a\b\x00\r\t")
 
 ```
