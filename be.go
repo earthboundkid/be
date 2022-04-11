@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// Equal calls t.Fatal if want != got.
+// Equal calls t.Fatalf if want != got.
 func Equal[T comparable](t testing.TB, want, got T) {
 	t.Helper()
 	if want != got {
@@ -13,7 +13,7 @@ func Equal[T comparable](t testing.TB, want, got T) {
 	}
 }
 
-// Unequal calls t.Fatal if got == bad.
+// Unequal calls t.Fatalf if got == bad.
 func Unequal[T comparable](t testing.TB, bad, got T) {
 	t.Helper()
 	if got == bad {
@@ -21,7 +21,7 @@ func Unequal[T comparable](t testing.TB, bad, got T) {
 	}
 }
 
-// AllEqual calls t.Fatal if want != got.
+// AllEqual calls t.Fatalf if want != got.
 func AllEqual[T comparable](t testing.TB, want, got []T) {
 	t.Helper()
 	if len(want) != len(got) {
@@ -36,7 +36,7 @@ func AllEqual[T comparable](t testing.TB, want, got []T) {
 	}
 }
 
-// Zero calls t.Fatal if value != the zero value for T.
+// Zero calls t.Fatalf if value != the zero value for T.
 func Zero[T any](t testing.TB, value T) {
 	t.Helper()
 	if truthy(value) {
@@ -44,7 +44,7 @@ func Zero[T any](t testing.TB, value T) {
 	}
 }
 
-// Nonzero calls t.Fatal if value == the zero value for T.
+// Nonzero calls t.Fatalf if value == the zero value for T.
 func Nonzero[T any](t testing.TB, value T) {
 	t.Helper()
 	if !truthy(value) {
@@ -69,7 +69,7 @@ func reflectValue(vp any) bool {
 	}
 }
 
-// NilErr calls t.Fatal if err is not nil.
+// NilErr calls t.Fatalf if err is not nil.
 func NilErr(t testing.TB, err error) {
 	t.Helper()
 	if err != nil {
@@ -77,7 +77,7 @@ func NilErr(t testing.TB, err error) {
 	}
 }
 
-// True calls t.Fatal if value is not true.
+// True calls t.Fatalf if value is not true.
 func True(t testing.TB, value bool) {
 	t.Helper()
 	if !value {
@@ -85,7 +85,7 @@ func True(t testing.TB, value bool) {
 	}
 }
 
-// False calls t.Fatal if value is not false.
+// False calls t.Fatalf if value is not false.
 func False(t testing.TB, value bool) {
 	t.Helper()
 	if value {
