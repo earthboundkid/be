@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// DeepEqual calls t.Fatal if want and got are different according to reflect.DeepEqual.
+// DeepEqual calls t.Fatalf if want and got are different according to reflect.DeepEqual.
 func DeepEqual[T any](t testing.TB, want, got T) {
 	t.Helper()
 	// Pass as pointers to get around the nil-interface problem

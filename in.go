@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// In calls t.Fatal if needle is not contained in the string or []byte haystack.
+// In calls t.Fatalf if needle is not contained in the string or []byte haystack.
 func In[byteseq ~string | ~[]byte](t testing.TB, needle string, haystack byteseq) {
 	t.Helper()
 	if !in(needle, haystack) {
@@ -15,7 +15,7 @@ func In[byteseq ~string | ~[]byte](t testing.TB, needle string, haystack byteseq
 	}
 }
 
-// NotIn calls t.Fatal if needle is contained in the string or []byte haystack.
+// NotIn calls t.Fatalf if needle is contained in the string or []byte haystack.
 func NotIn[byteseq ~string | ~[]byte](t testing.TB, needle string, haystack byteseq) {
 	t.Helper()
 	if in(needle, haystack) {
