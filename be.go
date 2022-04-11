@@ -69,11 +69,26 @@ func reflectValue(vp any) bool {
 	}
 }
 
-var (
-	// NilErr calls t.Fatal if value is not nil.
-	NilErr = Zero[error]
-	// True calls t.Fatal if value is not true.
-	True = Nonzero[bool]
-	// False calls t.Fatal if value is not false.
-	False = Zero[bool]
-)
+// NilErr calls t.Fatal if err is not nil.
+func NilErr(t testing.TB, err error) {
+	t.Helper()
+	if err != nil {
+		t.Fatalf("got: %v", err)
+	}
+}
+
+// True calls t.Fatal if value is not true.
+func True(t testing.TB, value bool) {
+	t.Helper()
+	if !value {
+		t.Fatalf("got: false")
+	}
+}
+
+// False calls t.Fatal if value is not false.
+func False(t testing.TB, value bool) {
+	t.Helper()
+	if value {
+		t.Fatalf("got: true")
+	}
+}
