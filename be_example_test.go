@@ -2,23 +2,13 @@ package be_test
 
 import (
 	"errors"
-	"fmt"
-	"testing"
 
 	"github.com/carlmjohnson/be"
 )
 
-type mockingT struct{ *testing.T }
-
-func (_ mockingT) Helper() {}
-
-func (_ mockingT) Fatalf(format string, args ...any) {
-	fmt.Printf(format+"\n", args...)
-}
-
 func Example() {
 	// mock *testing.T for example purposes
-	var t mockingT
+	t := be.Relaxed(&mockingT{})
 
 	be.Equal(t, "hello", "world")     // bad
 	be.Equal(t, "goodbye", "goodbye") // good
