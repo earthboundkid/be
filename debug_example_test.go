@@ -7,42 +7,12 @@ import (
 	"github.com/carlmjohnson/be"
 )
 
-type mockDebug struct {
-	testing.T
-	failed   bool
-	cleanups []func()
-}
-
-func (m *mockDebug) Run(name string, f func(t *testing.T)) {
-	defer func() {
-		for _, f := range m.cleanups {
-			defer f()
-		}
-	}()
-	f(&m.T)
-}
-
-func (m *mockDebug) Cleanup(f func()) {
-	m.cleanups = append(m.cleanups, f)
-}
-
-func (_ *mockDebug) Log(args ...any) {
-	fmt.Println(args...)
-}
-
-func (_ *mockDebug) Helper() {}
-
-func (m *mockDebug) Fatalf(format string, args ...any) {
-	m.failed = true
-	fmt.Printf(format+"\n", args...)
-}
-
-func (m *mockDebug) Failed() bool { return m.failed }
-
 func ExampleDebug() {
-	t := &mockDebug{}
+	// mock *testing.T for example purposes
+	t := &mockingT{}
+
 	// If a test fails, the callbacks will be replayed in LIFO order
-	t.Run("logging-example", func(_ *testing.T) {
+	t.Run("logging-example", func(*testing.T) {
 		x := 1
 		x1 := x
 		be.Debug(t, func() {
@@ -57,9 +27,9 @@ func ExampleDebug() {
 		})
 		be.Equal(t, x, 3)
 	})
-	t = &mockDebug{}
+
 	// If a test succeeds, nothing will be replayed
-	t.Run("silent-example", func(_ *testing.T) {
+	t.Run("silent-example", func(*testing.T) {
 		y := 1
 		y1 := y
 		be.Debug(t, func() {
@@ -81,18 +51,20 @@ func ExampleDebug() {
 }
 
 func ExampleDebugLog() {
-	t := &mockDebug{}
+	// mock *testing.T for example purposes
+	t := &mockingT{}
+
 	// If a test fails, the logs will be replayed in LIFO order
-	t.Run("logging-example", func(_ *testing.T) {
+	t.Run("logging-example", func(*testing.T) {
 		x := 1
 		be.DebugLog(t, "x: %d", x)
 		x = 2
 		be.DebugLog(t, "x: %d", x)
 		be.Equal(t, x, 3)
 	})
-	t = &mockDebug{}
+
 	// If a test succeeds, nothing will be replayed
-	t.Run("silent-example", func(_ *testing.T) {
+	t.Run("silent-example", func(*testing.T) {
 		y := 1
 		be.DebugLog(t, "y: %d", y)
 		y = 2
