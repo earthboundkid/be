@@ -92,3 +92,17 @@ func False(t testing.TB, value bool) {
 		t.Fatalf("got: true")
 	}
 }
+
+// OK is a convenience wrapper for NilErr checks.
+// It works with Go's generic type inference system
+// to allow inline function calling.
+func OK[T any](v T, err error) func(testing.TB) T {
+	return func(t testing.TB) T {
+		t.Helper()
+		if err != nil {
+			t.Fatalf("got: %v", err)
+			return *new(T)
+		}
+		return v
+	}
+}

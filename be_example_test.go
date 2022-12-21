@@ -2,6 +2,7 @@ package be_test
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/carlmjohnson/be"
 )
@@ -42,4 +43,29 @@ func Example() {
 	// got: (O_o)
 	// "World" not in "hello, world"
 	// "\x00" in "\a\b\x00\r\t"
+}
+
+func ExampleOK() {
+	// mock *testing.T for example purposes
+	t := be.Relaxed(&mockingT{})
+
+	// a function that might fail
+	flakey := func(n int) (int, error) {
+		if n == 1 {
+			return 0, errors.New("1 is invalid")
+		}
+		return n, nil
+	}
+
+	// Fails
+	n := be.OK(flakey(1))(t)
+	fmt.Println("n =", n)
+
+	// Succeeds
+	n = be.OK(flakey(2))(t)
+	fmt.Println("n =", n)
+	// Output:
+	// got: 1 is invalid
+	// n = 0
+	// n = 2
 }

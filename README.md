@@ -26,6 +26,10 @@ be.NilErr(t, err)   // bad
 // t.Fatal("got: (O_o)")
 be.Nonzero(t, err) // good
 
+// Can type infer results with be.OK
+val1 := be.OK(someFailingFunc())(t)    // bad
+val2 := be.OK(someSucceedingFunc())(t) // good
+
 be.In(t, "world", "hello, world") // good
 be.In(t, "World", "hello, world") // bad
 // t.Fatal("World" not in "hello, world")
