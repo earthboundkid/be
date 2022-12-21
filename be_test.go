@@ -43,6 +43,7 @@ func Test(t *testing.T) {
 	beOkay(func(tb testing.TB) { be.NilErr(tb, nil) })
 	beOkay(func(tb testing.TB) { be.True(tb, true) })
 	beOkay(func(tb testing.TB) { be.False(tb, false) })
+	beOkay(func(tb testing.TB) { be.OK(1, nil)(tb) })
 	beBad := func(callback func(tb testing.TB)) {
 		t.Helper()
 		var buf strings.Builder
@@ -62,4 +63,5 @@ func Test(t *testing.T) {
 	beBad(func(tb testing.TB) { be.NilErr(tb, errors.New("")) })
 	beBad(func(tb testing.TB) { be.True(tb, false) })
 	beBad(func(tb testing.TB) { be.False(tb, true) })
+	beBad(func(tb testing.TB) { be.OK(1, errors.New(""))(tb) })
 }
