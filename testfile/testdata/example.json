@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "field": "foo",
+      "value": 1
+    },
+    {
+      "field": "bar",
+      "value": 2
+    }
+  ]
+}
