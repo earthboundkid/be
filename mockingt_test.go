@@ -27,16 +27,17 @@ func (m *mockingT) failed() bool {
 }
 
 func (m *mockingT) Run(name string, f func(t *testing.T)) {
+	m.cleanups = nil
 	m.setFailed(false)
 	ch := make(chan struct{})
+	defer func() {
+		for _, f := range m.cleanups {
+			defer f()
+		}
+	}()
 	// Use a goroutine so Fatalf can call Goexit
 	go func() {
-		defer func() {
-			for _, f := range m.cleanups {
-				defer f()
-			}
-			close(ch)
-		}()
+		defer close(ch)
 		f(&m.T)
 	}()
 	<-ch
