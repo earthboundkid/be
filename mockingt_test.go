@@ -9,28 +9,28 @@ import (
 
 type mockingT struct {
 	testing.T
-	m        sync.Mutex
-	didFail  bool
-	cleanups []func()
+	m         sync.Mutex
+	hasFailed bool
+	cleanups  []func()
 }
 
-func (m *mockingT) setFail(b bool) {
+func (m *mockingT) setFailed(b bool) {
 	m.m.Lock()
 	defer m.m.Unlock()
-	m.didFail = b
+	m.hasFailed = b
 }
 
-func (m *mockingT) fail() bool {
+func (m *mockingT) failed() bool {
 	m.m.Lock()
 	defer m.m.Unlock()
-	return m.didFail
+	return m.hasFailed
 }
 
 func (m *mockingT) Run(name string, f func(t *testing.T)) {
+	m.setFailed(false)
 	ch := make(chan struct{})
 	// Use a goroutine so Fatalf can call Goexit
 	go func() {
-		defer func() { m.setFail(false) }()
 		defer func() {
 			for _, f := range m.cleanups {
 				defer f()
@@ -58,8 +58,8 @@ func (m *mockingT) Fatalf(format string, args ...any) {
 }
 
 func (m *mockingT) Errorf(format string, args ...any) {
-	m.setFail(true)
+	m.setFailed(true)
 	fmt.Printf(format+"\n", args...)
 }
 
-func (m *mockingT) Failed() bool { return m.fail() }
+func (m *mockingT) Failed() bool { return m.failed() }
