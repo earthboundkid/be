@@ -6,7 +6,7 @@ import (
 	"github.com/carlmjohnson/be/testfile"
 )
 
-func TestJSON(t *testing.T) {
+func TestRunEqualJSON(t *testing.T) {
 	testfile.Run(t, "testdata/*.json", func(t *testing.T, path string) {
 		testfile.EqualJSON(t, path, struct {
 			Data any `json:"data"`
@@ -20,5 +20,4 @@ func TestJSON(t *testing.T) {
 			},
 		})
 	})
-
 }
