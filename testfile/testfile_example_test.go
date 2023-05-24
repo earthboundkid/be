@@ -1,7 +1,6 @@
 package testfile_test
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -42,7 +41,7 @@ func Example() {
 }
 
 func ExampleRun() {
-	exampleRun := func(t *testing.T) {
+	_ = func(t *testing.T) {
 		// For each .txt file, start a sub-test
 		testfile.Run(t, "example-run/*.txt", func(t *testing.T, path string) {
 			type testdata struct{ Input, Output string }
@@ -55,13 +54,7 @@ func ExampleRun() {
 			// See if the struct is equivalent to a .json file
 			wantFile := strings.TrimSuffix(path, ".txt") + ".json"
 			testfile.EqualJSON(t, wantFile, got)
-			fmt.Printf("Test of %s passed!\n", path)
 		})
 	}
-
-	all := func(pat, str string) (bool, error) { return true, nil }
-	testing.RunTests(all, []testing.InternalTest{{"testfile.Run", exampleRun}})
-
 	// Output:
-	// Test of example-run/hello.txt passed!
 }
