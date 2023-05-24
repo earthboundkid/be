@@ -1,4 +1,4 @@
-# Be [![Go Reference](https://pkg.go.dev/badge/github.com/carlmjohnson/be.svg)](https://pkg.go.dev/github.com/carlmjohnson/be) [![Go Report Card](https://goreportcard.com/badge/github.com/carlmjohnson/be)](https://goreportcard.com/report/github.com/carlmjohnson/be) [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
+# Be [![Go Reference](https://pkg.go.dev/badge/github.com/carlmjohnson/be.svg)](https://pkg.go.dev/github.com/carlmjohnson/be) [![Go Report Card](https://goreportcard.com/badge/github.com/carlmjohnson/be)](https://goreportcard.com/report/github.com/carlmjohnson/be) [![Coverage Status](https://coveralls.io/repos/github/carlmjohnson/be/badge.svg)](https://coveralls.io/github/carlmjohnson/be) [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
 Package be is the minimalist testing helper for Go 1.18+.
 
 Inspired by [Mat Ryer](https://github.com/matryer/is) and [Alex Edwards](https://www.alexedwards.net/blog/easy-test-assertions-with-go-generics).
