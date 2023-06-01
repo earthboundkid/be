@@ -56,6 +56,7 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 	case err == nil, os.IsNotExist(err):
 	case err != nil:
 		t.Fatalf("%v", err)
+		return
 	}
 	w := string(b)
 	if trim {
@@ -115,6 +116,7 @@ func Run(t *testing.T, glob string, f func(t *testing.T, match string)) {
 	matches, err := filepath.Glob(glob)
 	if err != nil {
 		t.Fatalf("%v", err)
+		return
 	}
 	for i := range matches {
 		match := matches[i]
