@@ -9,25 +9,25 @@ import (
 	"testing"
 )
 
-// Read returns the contents of file.
+// Read returns the contents of file at path.
 // It calls t.Fatalf if there is an error.
-func Read(t testing.TB, name string) string {
+func Read(t testing.TB, path string) string {
 	t.Helper()
-	b, err := os.ReadFile(name)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 	return string(b)
 }
 
-// Write the data to a file with 0644 permission bits.
+// Write the data to a file at path with 0644 permission bits.
 // It attempts to create directories as needed.
 // It calls t.Fatalf if there is an error.
-func Write(t testing.TB, name, data string) {
+func Write(t testing.TB, path, data string) {
 	t.Helper()
-	dir := filepath.Dir(name)
+	dir := filepath.Dir(path)
 	_ = os.MkdirAll(dir, 0700)
-	err := os.WriteFile(name, []byte(data), 0644)
+	err := os.WriteFile(path, []byte(data), 0644)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
@@ -72,19 +72,23 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 	t.Fatalf("contents of %s != %s", wantFile, name)
 }
 
-// ReadJSON attempts to unmarshal the contents of a file into v.
+// ReadJSON attempts to unmarshal the contents of a file at path into v.
 // If there is an error, it calls t.Fatalf.
-func ReadJSON(t testing.TB, name string, v any) {
+func ReadJSON(t testing.TB, path string, v any) {
 	t.Helper()
-	s := Read(t, name)
+	s := Read(t, path)
 	if err := json.Unmarshal([]byte(s), v); err != nil {
-		t.Fatalf("unmarshal %s: %v", name, err)
+		t.Fatalf("unmarshal %s: %v", path, err)
 	}
 }
 
-// EqualJSON tests whether v is equal to the contents of wantFile when mashaled as JSON.
-// The JSON must be created with json.MarshalIndent and have two spaces as a prefix.
-// If they are not equal, it writes a file with the contents of v and calls t.Fatalf.
+// EqualJSON tests whether
+// when v is mashaled as JSON,
+// it is equal to the contents of wantFile.
+// The contents of wantFile must be created with json.MarshalIndent and have two spaces as a prefix.
+// EqualJSON just uses string equality
+// and does not test for JSON equivalency.
+// If they are not equal, it writes out a file with the contents of v and calls t.Fatalf.
 // If there is an error, it calls t.Fatalf.
 func EqualJSON(t testing.TB, wantFile string, v any) {
 	t.Helper()
@@ -96,17 +100,17 @@ func EqualJSON(t testing.TB, wantFile string, v any) {
 	Equalish(t, wantFile, string(b))
 }
 
-// WriteJSON writes v as to name as JSON
-// with json.MarshalIndent and has two spaces as a prefix.
+// WriteJSON writes v as JSON to a file at path.
+// The JSON is created with json.MarshalIndent using two spaces as a prefix.
 // If there is an error, it calls t.Fatalf.
-func WriteJSON(t testing.TB, name string, v any) {
+func WriteJSON(t testing.TB, path string, v any) {
 	t.Helper()
 	b, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		t.Fatalf("marshaling: %v", err)
 		return
 	}
-	Write(t, name, string(b))
+	Write(t, path, string(b))
 }
 
 // Run a subtest for each file matching the provided glob pattern.
