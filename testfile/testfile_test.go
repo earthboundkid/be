@@ -52,6 +52,9 @@ func TestCases(t *testing.T) {
 			testfile.Write(t, f, "bad")
 			testfile.Equal(t, f, "not equal")
 		}},
+		{"bad Equal file", false, func(t *testing.T) {
+			testfile.Equal(t, "/", "not equal")
+		}},
 		{"bad ReadJSON", false, func(t *testing.T) {
 			f := join("bad-read-json.txt")
 			testfile.Write(t, f, "xxx")
