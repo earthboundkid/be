@@ -40,3 +40,5 @@ Tests usually should not fail. When they do fail, the failure should be repeatab
 Most tests just need simple equality testing, which is handled by `be.Equal` (for comparable types), `be.AllEqual` (for slices of comparable types), and `be.DeepEqual` (which relies on `reflect.DeepEqual`). Another common test is that a string or byte slice should contain or not some substring, which is handled by `be.In` and `be.NotIn`. Rather than package be providing every possible test helper, you are encouraged to write your own advanced helpers for use with `be.True`, while package be takes away the drudgery of writing yet another simple `func nilErr(t *testing.T, err) { ... }`.
 
 Every test in the be package requires a `testing.TB` as its first argument. There are various [clever ways to get the testing.TB implicitly](https://dave.cheney.net/2019/12/08/dynamically-scoped-variables-in-go), but package be is designed to be simple and explicit, so it's easiest to just always pass in a testing.TB the boring way.
+
+The testfile subpackage has helper functions that make it easy to write file based tests that ensure that the output of some transformation matches a golden file.
