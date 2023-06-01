@@ -35,7 +35,7 @@ func Write(t testing.TB, name, data string) {
 
 // Equal tests whether gotStr is equal to the contents of wantFile.
 // If they are not equal,
-// it writes gotStr to a file with -bad added to its name
+// it writes gotStr to a file with -failed- prepended to its name
 // and calls t.Fatalf.
 func Equal(t testing.TB, wantFile, gotStr string) {
 	t.Helper()
@@ -66,9 +66,8 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 	if w == gotStr {
 		return
 	}
-	ext := filepath.Ext(wantFile)
-	base := strings.TrimSuffix(wantFile, ext)
-	name := base + "-bad" + ext
+	dir, name := filepath.Split(wantFile)
+	name = filepath.Join(dir, "-failed-"+name)
 	Write(t, name, gotStr)
 	t.Fatalf("contents of %s != %s", wantFile, name)
 }

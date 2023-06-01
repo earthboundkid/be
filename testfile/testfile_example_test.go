@@ -22,6 +22,8 @@ func Example() {
 	be.Equal(t, file, got)
 	// Use the equality helper
 	testfile.Equal(t, "example/upper.txt", got)
+	// If the files aren't equal,
+	// got will be written to example/-failed-upper.txt
 
 	// Or use JSON helpers for complex structs
 	type testcase struct {
