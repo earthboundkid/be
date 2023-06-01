@@ -45,17 +45,21 @@ func Example() {
 func ExampleRun() {
 	_ = func(t *testing.T) {
 		// For each .txt file, start a sub-test
-		testfile.Run(t, "example-run/*.txt", func(t *testing.T, path string) {
-			type testdata struct{ Input, Output string }
+		testfile.Run(t, "testdata/*.txt", func(t *testing.T, path string) {
 			// Read the file
 			input := testfile.Read(t, path)
+
 			// Do some conversion on it
-			output := strings.ToUpper(input)
-			got := testdata{input, output}
+			type myStruct struct{ Whatever string }
+			got := myStruct{strings.ToUpper(input)}
 
 			// See if the struct is equivalent to a .json file
 			wantFile := strings.TrimSuffix(path, ".txt") + ".json"
 			testfile.EqualJSON(t, wantFile, got)
+
+			// If it's not equivalent,
+			// the got struct will be dumped
+			// to a file named testdata/-failed-test-name.json
 		})
 	}
 	// Output:
