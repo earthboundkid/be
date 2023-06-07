@@ -85,7 +85,7 @@ func ReadJSON(t testing.TB, path string, v any) {
 // EqualJSON tests whether
 // when v is mashaled as JSON,
 // it is equal to the contents of wantFile.
-// The contents of wantFile must be created with json.MarshalIndent and have two spaces as a prefix.
+// The contents of wantFile must be created with json.MarshalIndent and have two spaces for indentation.
 // EqualJSON just uses string equality
 // and does not test for JSON equivalency.
 // If they are not equal, it writes out a file with the contents of v and calls t.Fatalf.
@@ -101,7 +101,7 @@ func EqualJSON(t testing.TB, wantFile string, v any) {
 }
 
 // WriteJSON writes v as JSON to a file at path.
-// The JSON is created with json.MarshalIndent using two spaces as a prefix.
+// The JSON is created with json.MarshalIndent using two spaces for indentation.
 // If there is an error, it calls t.Fatalf.
 func WriteJSON(t testing.TB, path string, v any) {
 	t.Helper()
