@@ -2,6 +2,7 @@
 package testfile
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -85,19 +86,37 @@ func ReadJSON(t testing.TB, path string, v any) {
 // EqualJSON tests whether
 // when v is mashaled as JSON,
 // it is equal to the contents of wantFile.
-// The contents of wantFile must be created with json.MarshalIndent and have two spaces for indentation.
-// EqualJSON just uses string equality
-// and does not test for JSON equivalency.
+// EqualJSON ignores whitespace in wantFile,
+// but is sensitive to the order of keys.
 // If they are not equal, it writes out a file with the contents of v and calls t.Fatalf.
 // If there is an error, it calls t.Fatalf.
 func EqualJSON(t testing.TB, wantFile string, v any) {
 	t.Helper()
-	b, err := json.MarshalIndent(v, "", "  ")
+	got, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
-		t.Fatalf("marshaling: %v", err)
+		t.Fatalf("marshaling v: %v", err)
 		return
 	}
-	Equalish(t, wantFile, string(b))
+	b, err := os.ReadFile(wantFile)
+	if err != nil {
+		t.Fatalf("reading wantFile: %v", err)
+		return
+	}
+	var buf bytes.Buffer
+	buf.Grow(len(b))
+	if err = json.Indent(&buf, b, "", "  "); err != nil {
+		t.Fatalf("indenting wantFile: %v", err)
+		return
+	}
+	gotStr := string(bytes.TrimSpace(got))
+	want := strings.TrimSpace(buf.String())
+	if gotStr == want {
+		return
+	}
+	dir, name := filepath.Split(wantFile)
+	name = filepath.Join(dir, "-failed-"+name)
+	Write(t, name, gotStr)
+	t.Fatalf("contents of %s != %s", wantFile, name)
 }
 
 // WriteJSON writes v as JSON to a file at path.
