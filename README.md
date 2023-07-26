@@ -3,15 +3,29 @@ Package be is the minimalist testing helper for Go.
 
 Inspired by [Mat Ryer](https://github.com/matryer/is) and [Alex Edwards](https://www.alexedwards.net/blog/easy-test-assertions-with-go-generics).
 
+## Features
+
+- Simple and readable test assertions using generics
+- Built-in helpers for common cases like `be.NilErr` and `be.In`
+- Fail fast by default but easily switch to relaxed with `be.Relaxed(t)`
+- Helpers for testing against golden files with the testfile subpackage
+- No dependencies: just uses standard library
+
 ## Example usage
 
 Test for simple equality using generics:
 
 ```go
+// Test two unequal strings
 be.Equal(t, "hello", "world")     // bad
 // t.Fatal("want: hello; got: world")
+// Test two equal strings
 be.Equal(t, "goodbye", "goodbye") // good
+// Test equal integers, etc.
+be.Equal(t, 200, resp.StatusCode)
+be.Equal(t, tc.wantPtr, gotPtr)
 
+// Test for inequality
 be.Unequal(t, "hello", "world")     // good
 be.Unequal(t, "goodbye", "goodbye") // bad
 // t.Fatal("got: goodbye")
