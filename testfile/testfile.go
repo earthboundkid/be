@@ -63,13 +63,15 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 		w = strings.TrimSpace(w)
 		gotStr = strings.TrimSpace(gotStr)
 	}
+	dir, name := filepath.Split(wantFile)
+	badFile := filepath.Join(dir, "-failed-"+name)
 	if w == gotStr {
+		// Remove lingering test failures
+		_ = os.Remove(badFile)
 		return
 	}
-	dir, name := filepath.Split(wantFile)
-	name = filepath.Join(dir, "-failed-"+name)
-	Write(t, name, gotStr)
-	t.Fatalf("contents of %s != %s", wantFile, name)
+	Write(t, badFile, gotStr)
+	t.Fatalf("contents of %s != %s", wantFile, badFile)
 }
 
 // ReadJSON attempts to unmarshal the contents of a file at path into v.
