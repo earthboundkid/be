@@ -70,6 +70,15 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 		_ = os.Remove(badFile)
 		return
 	}
+	if os.Getenv("TESTFILE_UPDATE") != "" {
+		// Remove lingering test failures
+		_ = os.Remove(badFile)
+		Write(t, wantFile, gotStr)
+		t.Cleanup(func() {
+			t.Fatalf("updated contents of %s", wantFile)
+		})
+		return
+	}
 	Write(t, badFile, gotStr)
 	t.Fatalf("contents of %s != %s", wantFile, badFile)
 }
