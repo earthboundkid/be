@@ -37,6 +37,11 @@ func Write(t testing.TB, path, data string) {
 // If they are not equal,
 // it writes gotStr to a file with -failed- prepended to its name
 // and calls t.Fatalf.
+//
+// If the environmental variable TESTFILE_UPDATE is set,
+// an unequal file will be overwritten with gotStr,
+// but the test will still fail
+// to prevent accidental updates from going unnoticed.
 func Equal(t testing.TB, wantFile, gotStr string) {
 	t.Helper()
 	equal(t, wantFile, gotStr, false)
@@ -44,6 +49,11 @@ func Equal(t testing.TB, wantFile, gotStr string) {
 
 // Equalish is like Equal,
 // but it uses strings.TrimSpace before testing for equality.
+//
+// If the environmental variable TESTFILE_UPDATE is set,
+// an unequal file will be overwritten with gotStr,
+// but the test will still fail
+// to prevent accidental updates from going unnoticed.
 func Equalish(t testing.TB, wantFile, gotStr string) {
 	t.Helper()
 	equal(t, wantFile, gotStr, true)
@@ -101,6 +111,11 @@ func ReadJSON(t testing.TB, path string, v any) {
 // and does not test for JSON equivalency.
 // If they are not equal, it writes out a file with the contents of v and calls t.Fatalf.
 // If there is an error, it calls t.Fatalf.
+//
+// If the environmental variable TESTFILE_UPDATE is set,
+// an unequal file will be overwritten with v,
+// but the test will still fail
+// to prevent accidental updates from going unnoticed.
 func EqualJSON(t testing.TB, wantFile string, v any) {
 	t.Helper()
 	var buf strings.Builder
