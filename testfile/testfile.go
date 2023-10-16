@@ -96,32 +96,40 @@ func ReadJSON(t testing.TB, path string, v any) {
 // EqualJSON tests whether
 // when v is mashaled as JSON,
 // it is equal to the contents of wantFile.
-// The contents of wantFile must be created with json.MarshalIndent and have two spaces for indentation.
+// The contents of wantFile must have two spaces for indentation.
 // EqualJSON just uses string equality
 // and does not test for JSON equivalency.
 // If they are not equal, it writes out a file with the contents of v and calls t.Fatalf.
 // If there is an error, it calls t.Fatalf.
 func EqualJSON(t testing.TB, wantFile string, v any) {
 	t.Helper()
-	b, err := json.MarshalIndent(v, "", "  ")
+	var buf strings.Builder
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	err := enc.Encode(v)
 	if err != nil {
 		t.Fatalf("marshaling: %v", err)
 		return
 	}
-	Equalish(t, wantFile, string(b))
+	Equalish(t, wantFile, buf.String())
 }
 
 // WriteJSON writes v as JSON to a file at path.
-// The JSON is created with json.MarshalIndent using two spaces for indentation.
+// The JSON is created using two spaces for indentation.
 // If there is an error, it calls t.Fatalf.
 func WriteJSON(t testing.TB, path string, v any) {
 	t.Helper()
-	b, err := json.MarshalIndent(v, "", "  ")
+	var buf strings.Builder
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	err := enc.Encode(v)
 	if err != nil {
 		t.Fatalf("marshaling: %v", err)
 		return
 	}
-	Write(t, path, string(b))
+	Write(t, path, buf.String())
 }
 
 // Run a subtest for each file matching the provided glob pattern.
