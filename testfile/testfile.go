@@ -84,9 +84,7 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 		// Remove lingering test failures
 		_ = os.Remove(badFile)
 		Write(t, wantFile, gotStr)
-		t.Cleanup(func() {
-			t.Fatalf("updated contents of %s", wantFile)
-		})
+		t.Errorf("updated contents of %s", wantFile)
 		return
 	}
 	Write(t, badFile, gotStr)
