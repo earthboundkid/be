@@ -3,25 +3,46 @@ package testfile_test
 import (
 	"math"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/carlmjohnson/be"
 	"github.com/carlmjohnson/be/testfile"
 )
 
-func TestRunEqualJSON(t *testing.T) {
-	testfile.Run(t, "testdata/*.json", func(t *testing.T, path string) {
-		testfile.EqualJSON(t, path, struct {
-			Data any `json:"data"`
+func runPaths(t *testing.T, inpath string) []string {
+	var paths []string
+	testfile.Run(t, inpath, func(t *testing.T, path string) {
+		paths = append(paths, path)
+	})
+	return paths
+}
+
+func TestRun(t *testing.T) {
+	cases := []struct {
+		InPath    string
+		WantFound string
+	}{
+		{"testdata/*.glorp", ""},
+		{"testdata/*.json", "testdata/example.json"},
+	}
+	for _, tc := range cases {
+		got := runPaths(t, tc.InPath)
+		be.Equal(t, tc.WantFound, strings.Join(got, ","))
+	}
+}
+
+func TestEqualJSON(t *testing.T) {
+	testfile.EqualJSON(t, "testdata/example.json", struct {
+		Data any `json:"data"`
+	}{
+		Data: []struct {
+			Field string `json:"field"`
+			Value int    `json:"value"`
 		}{
-			Data: []struct {
-				Field string `json:"field"`
-				Value int    `json:"value"`
-			}{
-				{"foo", 1},
-				{"bar", 2},
-			},
-		})
+			{"foo", 1},
+			{"bar", 2},
+		},
 	})
 }
 
@@ -79,4 +100,32 @@ func TestCases(t *testing.T) {
 			be.Equal(t, tc.want, runTest(tc.f))
 		})
 	}
+}
+
+func TestSetEnv(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "example.txt")
+	failedPath := filepath.Join(dir, "-failed-example.txt")
+
+	// If testfile.Equal fails
+	testfile.Write(t, path, "1")
+	be.False(t, runTest(func(t *testing.T) {
+		testfile.Equal(t, path, "2")
+	}))
+	// it writes a -failed file.
+	testfile.Equal(t, failedPath, "2")
+	// If testfile.Equal succeeds,
+	testfile.Equal(t, path, "1")
+	// it erases the -failed file.
+	testfile.Equal(t, failedPath, "")
+	// If TESTFILE_UPDATE is set,
+	t.Setenv("TESTFILE_UPDATE", "ON")
+	// the test still fails
+	be.False(t, runTest(func(t *testing.T) {
+		testfile.Equal(t, path, "3")
+	}))
+	// but it doesn't write a failed path,
+	testfile.Equal(t, failedPath, "")
+	// and does update the file.
+	testfile.Equal(t, path, "3")
 }
