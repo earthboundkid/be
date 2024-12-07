@@ -18,12 +18,13 @@ func ExamplePanicked() {
 	// Because a panic fails a test by default,
 	// testing that an operation does not panic is less necessary,
 	// but may be helpful in a table test.
-	denom := 2
-	panicVal := be.Panicked(func() {
-		divide(1, denom)
-	})
-	wantPanic := denom == 0
-	be.Equal(t, wantPanic, panicVal != nil)
+	for _, denom := range []int{-1, 0, 1, 1_000} {
+		shouldPanic := denom == 0
+		panicVal := be.Panicked(func() {
+			divide(1, denom)
+		})
+		be.Equal(t, shouldPanic, panicVal != nil)
+	}
 
 	// Output:
 }
