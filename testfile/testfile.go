@@ -10,7 +10,8 @@ import (
 )
 
 // Ext return path with its current extension stripped and ext added.
-// It treats ext with and without a leading dot the same for simplicity.
+// It treats ext with and without a leading dot the same for simplicity of operation.
+// If ext is "", path is returned with its current extension stripped off.
 func Ext(path, ext string) string {
 	currExt := filepath.Ext(path)
 	path = strings.TrimSuffix(path, currExt)
