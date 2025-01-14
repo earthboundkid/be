@@ -1,6 +1,7 @@
 package testfile_test
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -63,4 +64,22 @@ func ExampleRun() {
 		})
 	}
 	// Output:
+}
+
+func ExampleExt() {
+	for _, path := range []string{
+		"foo.txt",
+		"foo.bar/spam",
+	} {
+		fmt.Println(testfile.Ext(path, ""))
+		fmt.Println(testfile.Ext(path, ".json"))
+		fmt.Println(testfile.Ext(path, "gob"))
+	}
+	// Output:
+	// foo
+	// foo.json
+	// foo.gob
+	// foo.bar/spam
+	// foo.bar/spam.json
+	// foo.bar/spam.gob
 }

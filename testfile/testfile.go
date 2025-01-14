@@ -9,6 +9,18 @@ import (
 	"testing"
 )
 
+// Ext return path with its current extension stripped and ext added.
+// It treats ext with and without a leading dot the same for simplicity of operation.
+// If ext is "", path is returned with its current extension stripped off.
+func Ext(path, ext string) string {
+	currExt := filepath.Ext(path)
+	path = strings.TrimSuffix(path, currExt)
+	if !strings.HasPrefix(ext, ".") && ext != "" {
+		ext = "." + ext
+	}
+	return path + ext
+}
+
 // Read returns the contents of file at path.
 // It calls t.Fatalf if there is an error.
 func Read(t testing.TB, path string) string {
