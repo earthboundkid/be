@@ -64,6 +64,18 @@ be.NotIn(t, "\x00", []byte("\a\b\x00\r\t")) // bad
 // t.Fatal("\x00" in "\a\b\x00\r\t")
 ```
 
+Check how long something rangeable is:
+
+```
+seq := strings.FieldsSeq("1 2 3 4")
+be.EqualLength(t, seq, 4)     // good
+be.EqualLength(t, seq, 1)     // bad
+be.AtLeastLength(t, seq, 1)   // good
+be.AtLeastLength(t, seq, 5)   // bad
+be.AtLeastLength(t, "123", 3) // good
+be.AtLeastLength(t, "123", 4) // bad
+```
+
 Test anything else:
 
 ```go

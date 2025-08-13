@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"strings"
 	"testing"
 	"time"
@@ -43,6 +44,14 @@ func Test(t *testing.T) {
 	beOkay(func(tb testing.TB) { be.NilErr(tb, nil) })
 	beOkay(func(tb testing.TB) { be.True(tb, true) })
 	beOkay(func(tb testing.TB) { be.False(tb, false) })
+	beOkay(func(tb testing.TB) { be.EqualLength(tb, 0, map[int]int{}) })
+	beOkay(func(tb testing.TB) { be.EqualLength(tb, 1, map[int]int{1: 1}) })
+	ch := make(chan int, 1)
+	beOkay(func(tb testing.TB) { be.EqualLength(tb, 0, ch) })
+	ch <- 1
+	beOkay(func(tb testing.TB) { be.EqualLength(tb, 1, ch) })
+	seq2 := maps.All(map[int]int{1: 1})
+	beOkay(func(tb testing.TB) { be.EqualLength(tb, 1, seq2) })
 	beBad := func(callback func(tb testing.TB)) {
 		t.Helper()
 		var buf strings.Builder
@@ -62,4 +71,9 @@ func Test(t *testing.T) {
 	beBad(func(tb testing.TB) { be.NilErr(tb, errors.New("")) })
 	beBad(func(tb testing.TB) { be.True(tb, false) })
 	beBad(func(tb testing.TB) { be.False(tb, true) })
+	beBad(func(tb testing.TB) { be.EqualLength(tb, 1, ch) })
+	ch <- 1
+	beBad(func(tb testing.TB) { be.EqualLength(tb, 0, ch) })
+	close(ch)
+	beBad(func(tb testing.TB) { be.EqualLength(tb, 1, ch) })
 }
