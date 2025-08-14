@@ -30,7 +30,6 @@ func in[byteseq ~string | ~[]byte](needle string, haystack byteseq) bool {
 		return strings.Contains(rv.String(), needle)
 	case reflect.Slice:
 		return bytes.Contains(rv.Bytes(), []byte(needle))
-	default:
-		panic("unreachable")
 	}
+	panic("unreachable")
 }
