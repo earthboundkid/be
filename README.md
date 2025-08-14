@@ -66,7 +66,7 @@ be.NotIn(t, "\x00", []byte("\a\b\x00\r\t")) // bad
 
 Check how long something rangeable is:
 
-```
+```go
 seq := strings.FieldsSeq("1 2 3 4")
 be.EqualLength(t, seq, 4)     // good
 be.EqualLength(t, seq, 1)     // bad
@@ -96,7 +96,7 @@ testfile.Run(t, "testdata/*.txt", func(t *testing.T, path string) {
 	got := myStruct{strings.ToUpper(input)}
 
 	// See if the struct is equivalent to a .json file
-	wantFile := strings.TrimSuffix(path, ".txt") + ".json"
+	wantFile := testfile.Ext(path, ".json")
 	testfile.EqualJSON(t, wantFile, got)
 
 	// If it's not equivalent,

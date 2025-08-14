@@ -55,7 +55,7 @@ func ExampleRun() {
 			got := myStruct{strings.ToUpper(input)}
 
 			// See if the struct is equivalent to a .json file
-			wantFile := strings.TrimSuffix(path, ".txt") + ".json"
+			wantFile := testfile.Ext(path, ".json")
 			testfile.EqualJSON(t, wantFile, got)
 
 			// If it's not equivalent,
