@@ -71,6 +71,7 @@ func Test(t *testing.T) {
 	beBad(func(tb testing.TB) { be.NilErr(tb, errors.New("")) })
 	beBad(func(tb testing.TB) { be.True(tb, false) })
 	beBad(func(tb testing.TB) { be.False(tb, true) })
+	beBad(func(tb testing.TB) { be.EqualLength(tb, 0, seq2) })
 	beBad(func(tb testing.TB) { be.EqualLength(tb, 1, ch) })
 	ch <- 1
 	beBad(func(tb testing.TB) { be.EqualLength(tb, 0, ch) })
