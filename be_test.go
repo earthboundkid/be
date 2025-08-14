@@ -26,11 +26,34 @@ func (t *testingTB) Fatalf(format string, args ...any) {
 }
 
 func Test(t *testing.T) {
-	beOkay := func(callback func(tb testing.TB)) {
-		t.Helper()
+	okayTests := []func(tb testing.TB){
+		func(tb testing.TB) { be.Zero(tb, time.Time{}.Local()) },
+		func(tb testing.TB) { be.Zero(tb, []string(nil)) },
+		func(tb testing.TB) { be.Nonzero(tb, []string{""}) },
+		func(tb testing.TB) { be.NilErr(tb, nil) },
+		func(tb testing.TB) { be.True(tb, true) },
+		func(tb testing.TB) { be.False(tb, false) },
+		func(tb testing.TB) { be.EqualLength(tb, 0, map[int]int{}) },
+		func(tb testing.TB) { be.EqualLength(tb, 1, map[int]int{1: 1}) },
+		func(tb testing.TB) {
+			ch := make(chan int, 1)
+			be.EqualLength(tb, 0, ch)
+		},
+		func(tb testing.TB) {
+			ch := make(chan int, 1)
+			ch <- 1
+			be.EqualLength(tb, 1, ch)
+		},
+		func(tb testing.TB) {
+			seq2 := maps.All(map[int]int{1: 1})
+			be.EqualLength(tb, 1, seq2)
+		},
+	}
+
+	for _, test := range okayTests {
 		var buf strings.Builder
 		tb := &testingTB{w: &buf}
-		callback(tb)
+		test(tb)
 		if tb.failed {
 			t.Fatal("failed too soon")
 		}
@@ -38,25 +61,39 @@ func Test(t *testing.T) {
 			t.Fatal("wrote too much")
 		}
 	}
-	beOkay(func(tb testing.TB) { be.Zero(tb, time.Time{}.Local()) })
-	beOkay(func(tb testing.TB) { be.Zero(tb, []string(nil)) })
-	beOkay(func(tb testing.TB) { be.Nonzero(tb, []string{""}) })
-	beOkay(func(tb testing.TB) { be.NilErr(tb, nil) })
-	beOkay(func(tb testing.TB) { be.True(tb, true) })
-	beOkay(func(tb testing.TB) { be.False(tb, false) })
-	beOkay(func(tb testing.TB) { be.EqualLength(tb, 0, map[int]int{}) })
-	beOkay(func(tb testing.TB) { be.EqualLength(tb, 1, map[int]int{1: 1}) })
-	ch := make(chan int, 1)
-	beOkay(func(tb testing.TB) { be.EqualLength(tb, 0, ch) })
-	ch <- 1
-	beOkay(func(tb testing.TB) { be.EqualLength(tb, 1, ch) })
-	seq2 := maps.All(map[int]int{1: 1})
-	beOkay(func(tb testing.TB) { be.EqualLength(tb, 1, seq2) })
-	beBad := func(callback func(tb testing.TB)) {
-		t.Helper()
+
+	badTests := []func(tb testing.TB){
+		func(tb testing.TB) { be.AllEqual(tb, []string{}, []string{""}) },
+		func(tb testing.TB) { be.Nonzero(tb, time.Time{}.Local()) },
+		func(tb testing.TB) { be.Zero(tb, []string{""}) },
+		func(tb testing.TB) { be.Nonzero(tb, []string(nil)) },
+		func(tb testing.TB) { be.NilErr(tb, errors.New("")) },
+		func(tb testing.TB) { be.True(tb, false) },
+		func(tb testing.TB) { be.False(tb, true) },
+		func(tb testing.TB) {
+			seq2 := maps.All(map[int]int{1: 1})
+			be.EqualLength(tb, 0, seq2)
+		},
+		func(tb testing.TB) {
+			ch := make(chan int, 1)
+			be.EqualLength(tb, 1, ch)
+		},
+		func(tb testing.TB) {
+			ch := make(chan int, 1)
+			ch <- 1
+			be.EqualLength(tb, 0, ch)
+		},
+		func(tb testing.TB) {
+			ch := make(chan int, 1)
+			close(ch)
+			be.EqualLength(tb, 1, ch)
+		},
+	}
+
+	for _, test := range badTests {
 		var buf strings.Builder
 		tb := &testingTB{w: &buf}
-		callback(tb)
+		test(tb)
 		if !tb.failed {
 			t.Fatal("did not fail")
 		}
@@ -64,17 +101,4 @@ func Test(t *testing.T) {
 			t.Fatal("wrote too little")
 		}
 	}
-	beBad(func(tb testing.TB) { be.AllEqual(tb, []string{}, []string{""}) })
-	beBad(func(tb testing.TB) { be.Nonzero(tb, time.Time{}.Local()) })
-	beBad(func(tb testing.TB) { be.Zero(tb, []string{""}) })
-	beBad(func(tb testing.TB) { be.Nonzero(tb, []string(nil)) })
-	beBad(func(tb testing.TB) { be.NilErr(tb, errors.New("")) })
-	beBad(func(tb testing.TB) { be.True(tb, false) })
-	beBad(func(tb testing.TB) { be.False(tb, true) })
-	beBad(func(tb testing.TB) { be.EqualLength(tb, 0, seq2) })
-	beBad(func(tb testing.TB) { be.EqualLength(tb, 1, ch) })
-	ch <- 1
-	beBad(func(tb testing.TB) { be.EqualLength(tb, 0, ch) })
-	close(ch)
-	beBad(func(tb testing.TB) { be.EqualLength(tb, 1, ch) })
 }
