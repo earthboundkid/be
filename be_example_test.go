@@ -2,6 +2,7 @@ package be_test
 
 import (
 	"errors"
+	"os"
 	"strings"
 
 	"github.com/carlmjohnson/be"
@@ -22,11 +23,15 @@ func Example() {
 	be.AllEqual(t, []int{3, 2, 1}, s) // bad
 
 	var err error
-	be.NilErr(t, err)  // good
-	be.Nonzero(t, err) // bad
+	be.Zero(t, err)                      // good
+	be.ErrorIs(t, nil, err)              // good
+	be.Nonzero(t, err)                   // bad
+	be.ErrorIs(t, os.ErrPermission, err) // bad
+
 	err = errors.New("(O_o)")
-	be.NilErr(t, err)  // bad
-	be.Nonzero(t, err) // good
+	var asErr *os.PathError
+	be.ErrorAs(t, &asErr, err) // bad
+	be.Nonzero(t, err)         // good
 
 	type mytype string
 	var mystring mytype = "hello, world"
@@ -48,7 +53,8 @@ func Example() {
 	// got: goodbye
 	// want: [3 2 1]; got: [1 2 3]
 	// got: <nil>
-	// got: (O_o)
+	// got errors.Is(<nil>, permission denied) == false
+	// got errors.As((O_o), **fs.PathError) == false
 	// "World" not in "hello, world"
 	// "\x00" in "\a\b\x00\r\t"
 	// want len(seq) == 1; got at least 2
