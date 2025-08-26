@@ -25,7 +25,7 @@ func Unequal[T comparable](t testing.TB, bad, got T) {
 func AllEqual[T comparable](t testing.TB, want, got []T) {
 	t.Helper()
 	if len(want) != len(got) {
-		t.Fatalf("len(want): %d; len(got): %v", len(want), len(got))
+		t.Fatalf("want: %v; got: %v", want, got)
 		return
 	}
 	for i := range want {
