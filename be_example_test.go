@@ -35,10 +35,10 @@ func Example() {
 
 	type mytype string
 	var mystring mytype = "hello, world"
-	be.In(t, "world", mystring)                 // good
-	be.In(t, "World", mystring)                 // bad
-	be.NotIn(t, "\x01", []byte("\a\b\x00\r\t")) // good
-	be.NotIn(t, "\x00", []byte("\a\b\x00\r\t")) // bad
+	be.Match(t, `world`, mystring)               // good
+	be.Match(t, `World`, mystring)               // bad
+	be.Match(t, `^\W*$`, []byte("\a\b\x00\r\t")) // good
+	be.Match(t, `^\W*$`, []byte("\a\bo\r\t"))    // bad
 
 	seq := strings.FieldsSeq("1 2 3 4")
 	be.EqualLength(t, 4, seq)     // good
@@ -55,8 +55,8 @@ func Example() {
 	// got: <nil>
 	// got errors.Is(<nil>, permission denied) == false
 	// got errors.As((O_o), **fs.PathError) == false
-	// "World" not in "hello, world"
-	// "\x00" in "\a\b\x00\r\t"
+	// /World/ !~ "hello, world"
+	// /^\W*$/ !~ "\a\bo\r\t"
 	// want len(seq) == 1; got at least 2
 	// want len(seq) >= 5; got 4
 	// want len(seq) >= 4; got 3
