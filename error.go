@@ -13,7 +13,7 @@ func ErrorIs(t testing.TB, want, got error) {
 	}
 }
 
-// ErrorIs calls t.Fatalf if got cannot be assigned to want by [errors.As].
+// ErrorAs calls t.Fatalf if got cannot be assigned to want by [errors.As].
 func ErrorAs[T error](t testing.TB, want *T, got error) {
 	t.Helper()
 	if !errors.As(got, want) {
