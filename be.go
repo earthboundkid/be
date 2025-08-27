@@ -2,6 +2,7 @@ package be
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -24,15 +25,8 @@ func Unequal[T comparable](t testing.TB, bad, got T) {
 // AllEqual calls t.Fatalf if want != got.
 func AllEqual[T comparable](t testing.TB, want, got []T) {
 	t.Helper()
-	if len(want) != len(got) {
+	if !slices.Equal(want, got) {
 		t.Fatalf("want: %v; got: %v", want, got)
-		return
-	}
-	for i := range want {
-		if want[i] != got[i] {
-			t.Fatalf("want: %v; got: %v", want, got)
-			return
-		}
 	}
 }
 
