@@ -13,7 +13,18 @@ func Match[byteseq ~string | ~[]byte](t testing.TB, pattern string, got byteseq)
 	t.Helper()
 	reg := regexp.MustCompile(pattern)
 	if !match(reg, got) {
-		t.Fatalf("/%s/ !~ %q", pattern, got)
+		t.Fatalf("missing match: /%s/ !~ %q", pattern, got)
+	}
+}
+
+// NoMatch calls t.Fatalf if got matches the [regexp] pattern.
+//
+// The pattern must compile.
+func NoMatch[byteseq ~string | ~[]byte](t testing.TB, pattern string, got byteseq) {
+	t.Helper()
+	reg := regexp.MustCompile(pattern)
+	if match(reg, got) {
+		t.Fatalf("unexpected match: /%s/ =~ %q", pattern, got)
 	}
 }
 
